@@ -16,16 +16,43 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/OmgWebAppLandingPage'),
+      dir: require('path').join(__dirname, 'coverage'),
       reports: ['html', 'lcovonly', 'text-summary'],
-      fixWebpackSourcePaths: true
+      fixWebpackSourcePaths: true,
+      combineBrowserReports: true,
+      skipFilesWithNoCoverage: true,
+      'report-config': {
+        // all options available at: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib/html/index.js#L135-L137
+        html: {
+          subdir: 'html'
+        }
+      },
+      // enforce percentage thresholds
+      // anything under these percentages will cause karma to fail with an exit code of 1 if not running in watch mode
+      thresholds: {
+        emitWarning: true, // set to `true` to not fail the test command when thresholds are not met
+        // thresholds for all files
+        global: {
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100
+        },
+        // thresholds per file
+        each: {
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100,
+        }
+      }
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['coverage-istanbul'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });

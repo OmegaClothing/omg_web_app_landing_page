@@ -3,6 +3,8 @@ version: 0.2
 env:
     variables:
         BUILD_ENV : "prod"
+        LT_USERNAME: "{cartier.sylv}"
+        LT_ACCESS_KEY: "{uZBHFnm7zIQe9yewXfrgPHeWKYSOH0Q1aCs6rILj0Tc4v6nVNm}"
 
 phases:
     install:
@@ -11,10 +13,13 @@ phases:
         commands:
             - npm ci
             - npm install -g @angular/cli
+            - curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - apt-get -y install google-chrome-stable
         finally:
-            - echo This always runs even if the update or install command fails 
+            - echo This always runs even if the update or install command fails
     build:
         commands:
+            - npm run test:ci
             - ng build --${BUILD_ENV} --aot
         finally:
             - echo This always runs even if the install command fails
